@@ -1,18 +1,25 @@
 import React from "react";
+import _ from "lodash";
 import { BrowserRouter, Switch, Route, Link, Redirect, useParams } from "react-router-dom";
 
 /** Entrypoint to App, as well as the router */
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {user: "dave"};
+    // TODO - change to redux store for username fetching/setting!
+    this.state = {username: ""};
   }
 
   /** Used to make picker link unclickable if a username is not in current state */
   ensureUsernameProvided = (e) => {
-    if (this.state.user) return;
+    if (this.state.username) return;
     e.preventDefault();
-    alert("Need a username to view picker");
+    alert("Need a username to view picker!");
+  }
+
+  // TODO - change this to use redux store
+  setUserName = (username) => {
+    this.setState({username: username});
   }
 
   render() {
@@ -35,20 +42,21 @@ class App extends React.Component {
           <Switch>
             {/* Home Route */}
             <Route exact path="/">
-                <Home />
+                {/* TODO change this to use redux and avoid this callback alltogether */}
+                <Home setUserName={(username) => this.setUserName(username)}/>
             </Route>
 
-            {/* Picker Route. If we have a user, show the picker component. If not, redirect to home. */}
+            {/* Picker Route. If we have a username, show the picker component. If not, redirect to home. */}
             <Route exact path="/picker">
-              {this.state.user ? <Redirect to={`/picker/${this.state.user}`} /> : <Redirect to="/" />}
+              {this.state.username ? <Redirect to={`/picker/${this.state.username}`} /> : <Redirect to="/" />}
             </Route>
             <Route path="/picker/:id">
               <Picker />
             </Route>
 
-            {/* Report Route. Allow this to be selected regardless of a user state. */}
+            {/* Report Route. Allow this to be selected regardless of a username state. */}
             <Route exact path="/reports">
-              {this.state.user ? <Redirect to={`/reports/${this.state.user}`} /> : <Reports />}
+              {this.state.username ? <Redirect to={`/reports/${this.state.username}`} /> : <Reports />}
             </Route>
             <Route path="/reports/:id">
               <Reports />
@@ -68,12 +76,26 @@ class App extends React.Component {
 /** Home Page */
 class Home extends React.Component {
 
-  
+  constructor() {
+    super();
+    // TODO - change to redux store for username fetching/setting!
+    this.state = {username: ""};
+  }
 
+  onChange = _.debounce((username) => {
+    this.setState({username: username});
+    this.props.setUserName(username);
+  }, 300);
 
   render(){
     return (
-      <h2>Home</h2>
+      <form>
+        <p>Enter a User Name to proceed:</p>
+        <input
+          type='text'
+          onChange={(e) => this.onChange(e.target.value)}
+        />
+      </form>
     );
   }
 }

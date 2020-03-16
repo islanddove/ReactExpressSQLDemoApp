@@ -27,8 +27,5 @@ export const reducers = combineReducers({
     // TODO add more reducers here
 });
   
-const store = createStore(reducers);
-console.log(store.getState()) 
-
 // store
 export default createStore(reducers);

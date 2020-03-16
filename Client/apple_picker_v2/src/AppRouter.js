@@ -8,7 +8,7 @@ import Picker from "./components/Picker";
 import Reports from "./components/Reports";
 
 /** Entrypoint to App, as well as the router */
-class App extends React.Component {
+class AppRouter extends React.Component {
 
   /** Used to make picker link unclickable if a there is no username */
   ensureUsernameProvided = (e) => {
@@ -70,4 +70,4 @@ const mapState = state => ({
     username: state.username
 });
 
-export default connect(mapState)(App);
+export default connect(mapState)(AppRouter);

@@ -1,25 +1,20 @@
 import React from "react";
-import _ from "lodash";
-import { BrowserRouter, Switch, Route, Link, Redirect, useParams } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link, Redirect } from "react-router-dom";
+
+import { connect } from "react-redux";
+
+import Home from "./components/Home";
+import Picker from "./components/Picker";
+import Reports from "./components/Reports";
 
 /** Entrypoint to App, as well as the router */
 class App extends React.Component {
-  constructor() {
-    super();
-    // TODO - change to redux store for username fetching/setting!
-    this.state = {username: ""};
-  }
 
-  /** Used to make picker link unclickable if a username is not in current state */
+  /** Used to make picker link unclickable if a there is no username */
   ensureUsernameProvided = (e) => {
-    if (this.state.username) return;
-    e.preventDefault();
-    alert("Need a username to view picker!");
-  }
-
-  // TODO - change this to use redux store
-  setUserName = (username) => {
-    this.setState({username: username});
+      if (this.props.username) return;
+      e.preventDefault();
+      alert("Input a username to view this page!");
   }
 
   render() {
@@ -35,37 +30,35 @@ class App extends React.Component {
                 <Link to="/picker" onClick={e => this.ensureUsernameProvided(e)}>Picker</Link>
               </li>
               <li>
-                <Link to="/reports">Reports</Link>
+                <Link to="/reports" onClick={e => this.ensureUsernameProvided(e)}>Reports</Link>
               </li>
             </ul>
           </nav>
           <Switch>
+            
             {/* Home Route */}
             <Route exact path="/">
                 {/* TODO change this to use redux and avoid this callback alltogether */}
-                <Home setUserName={(username) => this.setUserName(username)}/>
+                <Home />
             </Route>
 
             {/* Picker Route. If we have a username, show the picker component. If not, redirect to home. */}
             <Route exact path="/picker">
-              {this.state.username ? <Redirect to={`/picker/${this.state.username}`} /> : <Redirect to="/" />}
+              {this.props.username ? <Redirect to={`/picker/${this.props.username}`} /> : <Redirect to="/" />}
             </Route>
-            <Route path="/picker/:id">
-              <Picker />
-            </Route>
+            <Route path="/picker/:username" component={Picker} />
 
-            {/* Report Route. Allow this to be selected regardless of a username state. */}
+            {/* Report Route. If we have a username, show the report component. If not, redirect to home. */}
             <Route exact path="/reports">
-              {this.state.username ? <Redirect to={`/reports/${this.state.username}`} /> : <Reports />}
+              {this.props.username ? <Redirect to={`/reports/${this.props.username}`} /> : <Redirect to="/" />}
             </Route>
-            <Route path="/reports/:id">
-              <Reports />
-            </Route>
+            <Route path="/reports/:username" component={Reports} />
 
             {/* Wildcard Route. Send back to the home screen. */}
             <Route path="/*">
               <Redirect to="/" />
             </Route>
+
           </Switch>
         </div>
       </BrowserRouter>
@@ -73,45 +66,8 @@ class App extends React.Component {
   }
 }
 
-/** Home Page */
-class Home extends React.Component {
+const mapState = state => ({
+    username: state.username
+});
 
-  constructor() {
-    super();
-    // TODO - change to redux store for username fetching/setting!
-    this.state = {username: ""};
-  }
-
-  onChange = _.debounce((username) => {
-    this.setState({username: username});
-    this.props.setUserName(username);
-  }, 300);
-
-  render(){
-    return (
-      <form>
-        <p>Enter a User Name to proceed:</p>
-        <input
-          type='text'
-          onChange={(e) => this.onChange(e.target.value)}
-        />
-      </form>
-    );
-  }
-}
-
-/** Apple Picker */
-function Picker() {
-
-  let { id } = useParams();
-  return <h2>Picker: {id}</h2>;
-}
-
-/** Reports */
-function Reports() {
-
-  let { id } = useParams();
-  return <h2>Reports: {id}</h2>;
-}
-
-export default App;
+export default connect(mapState)(App);

@@ -1,8 +1,7 @@
 import React from "react";
 
 import { connect } from "react-redux";
-import { setUsername } from "../utils/store";
-import { appleInfo as leaderboard} from "../utils/constants"
+import { setUsername, addWinToLeaderboard, resetLeaderboard } from "../utils/store";
 
 import { ImageView, Button, ListWinners as List } from "./StatelessFunctionalComponents";
 import "../css/Picker.css";
@@ -13,25 +12,24 @@ class Picker extends React.Component {
     constructor(props) {
         super(props);
 
-        // Set user to the result of the URL param
         const urlUsername = this.props.match.params.username;
-        if (urlUsername !== this.props.username) this.props.setUsername(urlUsername);
+        // Set user to the result of the URL param. If the username has changed, clear leaderboard.
+        if (urlUsername !== this.props.username) {
+            this.props.setUsername(urlUsername);
+            this.props.resetLeaderboard();
+        }
 
-        // Do not use Redux for apple data, since it does not need to be persisted across routes
-        this.state = { leftApple: {}, rightApple: {}, selectedimage: "", leaderboard: [] };
+        this.state = { leftApple: {}, rightApple: {}, selectedimage: "" };
     }
 
     async componentDidMount () {
         try {
             const { leftApple, rightApple } = await this.getNewApples();
 
-            leaderboard.forEach(apple => apple.wins = 0);
-
             this.setState({
                 leftApple: leftApple,
                 rightApple: rightApple,
-                selectedimage: "none",
-                leaderboard: leaderboard
+                selectedimage: "none"
             });
         }
         catch (error) {
@@ -54,30 +52,24 @@ class Picker extends React.Component {
             return;
         }
         try {
-            let leaderboard = this.state.leaderboard;
 
-            if (this.state.selectedimage === "left") {
-                await this.submitWinnerToAPI(this.state.leftApple);
-                leaderboard.forEach(apple => { if (apple.id === this.state.leftApple.id) apple.wins++; });
-            }
-            if (this.state.selectedimage === "right") {
-                await this.submitWinnerToAPI(this.state.rightApple);
-                leaderboard.forEach(apple => { if (apple.id === this.state.rightApple.id) apple.wins++; });
-            }
+            const result = {
+                leftAppleId: this.state.leftApple.id, 
+                rightAppleId: this.state.rightApple.id,
+                winner: this.state.selectedimage, 
+                username: this.props.username
+            };
 
-            leaderboard.sort(function (a, b) {
-                if (a.wins < b.wins) return 1;
-                if (a.wins > b.wins) return -1;
-                return 0;
-            });
+            await this.sendResultToAPI(result);
+
+            this.props.addWinToLeaderboard(this.state.selectedimage === "left" ? this.state.leftApple.id : this.state.rightApple.id);
 
             const {leftApple, rightApple} = await this.getNewApples();
 
             this.setState({
                 leftApple: leftApple,
                 rightApple: rightApple,
-                selectedimage: "none",
-                leaderboard: leaderboard
+                selectedimage: "none"
             });
         }
         catch (error) {
@@ -86,14 +78,11 @@ class Picker extends React.Component {
         }
     }
 
-    async submitWinnerToAPI (apple) {
+    async sendResultToAPI (result) {
         const response = await fetch("/postWinner", {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                appleId: apple.id,
-                username: this.props.username
-            })
+            body: JSON.stringify(result)
         });
 
         if (!response.ok) throw new Error(response);
@@ -103,7 +92,7 @@ class Picker extends React.Component {
     render() {
         return (
             <div className="App">
-                <h1>Pick an Apple</h1>
+                <h1>Pick an Apple, {this.props.username}!</h1>
                 <div className = "Images">
                     <ImageView
                         src={this.state.leftApple.picture}
@@ -127,7 +116,7 @@ class Picker extends React.Component {
                 </div>
                 <div className = "Leaderboard">
                     <List
-                        sortedWins={this.state.leaderboard}
+                        sortedWins={this.props.leaderboard}
                     />
                 </div>
             </div>
@@ -136,7 +125,8 @@ class Picker extends React.Component {
 }
 
 const mapState = state => ({
-    username: state.username
+    username: state.username,
+    leaderboard: state.leaderboard
 });
-const mapActions = { setUsername };
+const mapActions = { setUsername, addWinToLeaderboard, resetLeaderboard };
 export default connect(mapState, mapActions)(Picker);

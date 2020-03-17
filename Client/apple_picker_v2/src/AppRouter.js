@@ -37,10 +37,7 @@ class AppRouter extends React.Component {
           <Switch>
             
             {/* Home Route */}
-            <Route exact path="/">
-                {/* TODO change this to use redux and avoid this callback alltogether */}
-                <Home />
-            </Route>
+            <Route exact path="/" component={Home} />
 
             {/* Picker Route. If we have a username, show the picker component. If not, redirect to home. */}
             <Route exact path="/picker">

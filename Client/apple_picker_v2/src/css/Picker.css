@@ -1,0 +1,57 @@
+.ImageView {
+  display: inline-block;
+  margin: 25px;
+}
+
+.ImageViewSelected {
+  display: inline-block;
+  border-radius: 8px;
+  margin: 25px;
+  border: 5px solid #ff0000;
+}
+
+.ol {
+  list-style-position: inside;
+  text-align: center;
+  margin: 25px;
+  padding: 0;
+}
+
+.li {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.Leaderboard {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+}
+
+.App {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+  border: 2px solid #4caf50;
+  font-family: courier;
+}
+
+.Button {
+  text-align: center;
+  background-color: #ffffff;
+  border: 2px solid #4caf50;
+  font-size: 15px;
+  margin: 2px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  height: 60px;
+  width: 190px;
+}
+
+.Button:hover {
+  background-color: #4caf50;
+  color: white;
+}

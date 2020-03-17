@@ -1,11 +1,15 @@
 {
   "name": "api",
   "version": "1.0.0",
+  "engines": {
+    "node": "13.10.x"
+  },
   "description": "API. Used to serve the client code, as well as act as DB interface.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "heroku-postbuild": "cd Client/apple_picker_v2 && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",

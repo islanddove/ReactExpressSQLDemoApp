@@ -10,8 +10,8 @@ const upload = multer();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(upload.array());
-app.use(express.static(path.join(__dirname, "../Client/apple_picker_v2/build")));
-app.use(express.static("img"));
+app.use(express.static(path.join(__dirname, "Client/apple_picker_v2/build")));
+app.use(express.static("API/img"));
 
 const imgPath = process.env.PORT ? "" : "http://localhost:3010";
 

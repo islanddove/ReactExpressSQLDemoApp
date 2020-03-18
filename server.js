@@ -73,44 +73,64 @@ var appleInfo = [
     }
   ]
   
-  /** Each request returns two random apples to be compared against each other */
-  app.get("/getComparisonData", function (req, res) {
+/** Each request returns two random apples to be compared against each other */
+app.get("/getComparisonData", function (req, res) {
 
-      let index1 = Math.floor(Math.random() * 11);
-      let index2 = Math.floor(Math.random() * 11);
+    let index1 = Math.floor(Math.random() * 11);
+    let index2 = Math.floor(Math.random() * 11);
 
-      //If same, pick new number until different 🤷‍♂️
-      while (index1 === index2) index2 = Math.floor(Math.random() * 11);
+    //If same, pick new number until different 🤷‍♂️
+    while (index1 === index2) index2 = Math.floor(Math.random() * 11);
 
-      const comparisonData = { leftApple: appleInfo[index1], rightApple: appleInfo[index2] };
-      res.json(comparisonData);
-  });
+    const comparisonData = { leftApple: appleInfo[index1], rightApple: appleInfo[index2] };
+    res.json(comparisonData);
+});
 
-  // Endpoint for submitting a winning apple, and an associated username
-  app.post("/postWinner", function (req, res) {
+// Endpoint for submitting a winning apple, and an associated username
+app.post("/postWinner", function (req, res) {
 
-      if (!req.body.username || typeof req.body.appleId !== "number") {
-          res.status(400).send({
-              success: "false",
-              message: "no id selected"
-          });
-      }
+    if (!req.body.username) {
+        res.status(400).send({
+            success: "false",
+            message: "no username"
+        });
+    }
 
-      // TODO - send result to DB!
-
-      res.status(200).send({
-          success: "true",
-          message: "request recieved"
+    if (typeof req.body.leftAppleId !== "number" || req.body.leftAppleId < 0 || req.body.leftAppleId > 10) {
+      res.status(400).send({
+          success: "false",
+          message: "no leftAppleId"
       });
-  });
+    }
 
+    if (typeof req.body.rightAppleId !== "number" || req.body.rightAppleId < 0 || req.body.rightAppleId > 10) {
+      res.status(400).send({
+          success: "false",
+          message: "no rightAppleId"
+      });
+    }
+
+    if (!req.body.winner || (req.body.winner !== "left" && req.body.winner !== "right")) {
+      res.status(400).send({
+          success: "false",
+          message: "no winner"
+      });
+    }
+
+    // TODO - send result to DB!
+
+    res.status(200).send({
+        success: "true",
+        message: "request recieved"
+    });
+});
 
 app.get("/ping", function (req, res) {
     return res.send("pong");
 });
 
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
+app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "Client/apple_picker_v2/build", "index.html"));
 });
 
 app.listen(process.env.PORT || 3010);

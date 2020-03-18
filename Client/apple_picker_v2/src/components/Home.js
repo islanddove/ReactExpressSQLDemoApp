@@ -1,7 +1,7 @@
 import React from "react";
 
 import { connect } from "react-redux";
-import { setUsername, clearUsername } from "../utils/store";
+import { setUsername, clearUsername, resetLeaderboard } from "../utils/store";
 
 import { debounce } from "lodash";
 
@@ -11,18 +11,19 @@ class Home extends React.Component {
 
     onChange = debounce((username) => {
         this.props.setUsername(username);
+        this.props.resetLeaderboard();
     }, 300);
 
-    render(){
+    render () {
         return (
-        <form>
-            <p>{this.props.username ? "" : "Enter a User Name to proceed:"} </p>
-            <input
-                type='text'
-                onChange={(e) => this.onChange(e.target.value)}
-            />
-            <div>Current Username: {this.props.username ? this.props.username : "N/A"}</div>
-        </form>
+            <form>
+                <p>{this.props.username ? "" : "Enter a User Name to proceed:"} </p>
+                <input
+                    type='text'
+                    onChange={(e) => this.onChange(e.target.value)}
+                />
+                <div>Current Username: {this.props.username ? this.props.username : "N/A"}</div>
+            </form>
         );
     }
 }
@@ -30,10 +31,5 @@ class Home extends React.Component {
 const mapState = state => ({
     username: state.username
 });
-
-const mapActions = {
-    setUsername,
-    clearUsername
-}
-
+const mapActions = { setUsername, clearUsername, resetLeaderboard };
 export default connect(mapState, mapActions)(Home);

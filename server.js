@@ -3,9 +3,15 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
 
+const { Pool } = require('pg');
+
+const database = new Pool({
+    connectionString: process.env.DATABASE_URL || "postgres://localhost:5432/davidolsen",
+    ssl: process.env.DATABASE_URL ? true : false
+});
+
 const app = express();
 const upload = multer();
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -86,43 +92,30 @@ app.get("/getComparisonData", function (req, res) {
     res.json(comparisonData);
 });
 
-// Endpoint for submitting a winning apple, and an associated username
-app.post("/postWinner", function (req, res) {
+/** Endpoint for submitting a winning apple, and an associated username */
+app.post("/postWinner", async function (req, res) {
 
-    if (!req.body.username) {
-        res.status(400).send({
-            success: "false",
-            message: "no username"
-        });
+    /** Send Result to DB! */
+    try {
+        const leftAppleId = req.body.leftAppleId;
+        const rightAppleId = req.body.rightAppleId;
+        const winningAppleId = req.body.winner === "left" ? leftAppleId : rightAppleId;
+
+        const username = req.body.username;
+
+        let userRecord = await database.query("SELECT * FROM Users WHERE username = $1", [username]);
+        if ( !userRecord.rows[0] ) userRecord = await database.query("INSERT INTO Users(username) VALUES($1) RETURNING *;", [username]);
+        const user = userRecord.rows[0];
+
+        let pickerRecord = await database.query("INSERT INTO ApplePickerResults(user_id,leftApple_id,rightApple_id,winningApple_id,created_on) VALUES($1,$2,$3,$4,$5) RETURNING *;",
+                                                [user.id, leftAppleId, rightAppleId, winningAppleId, new Date()]);
+        
+        res.status(200).json({winner: pickerRecord.rows[0]});
+        return;
+    } catch (err) {
+        res.sendStatus(500);
+        return;
     }
-
-    if (typeof req.body.leftAppleId !== "number" || req.body.leftAppleId < 0 || req.body.leftAppleId > 10) {
-      res.status(400).send({
-          success: "false",
-          message: "no leftAppleId"
-      });
-    }
-
-    if (typeof req.body.rightAppleId !== "number" || req.body.rightAppleId < 0 || req.body.rightAppleId > 10) {
-      res.status(400).send({
-          success: "false",
-          message: "no rightAppleId"
-      });
-    }
-
-    if (!req.body.winner || (req.body.winner !== "left" && req.body.winner !== "right")) {
-      res.status(400).send({
-          success: "false",
-          message: "no winner"
-      });
-    }
-
-    // TODO - send result to DB!
-
-    res.status(200).send({
-        success: "true",
-        message: "request recieved"
-    });
 });
 
 app.get("/ping", function (req, res) {

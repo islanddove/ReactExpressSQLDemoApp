@@ -118,6 +118,35 @@ app.post("/postWinner", async function (req, res) {
     }
 });
 
+app.get("/getTotalWinsAllTime", async function (req, res) {
+
+    try {
+        const totalWinReport = `
+        SELECT
+            SUM(CASE WHEN winningapple_id = 0 THEN 1 ELSE 0 END) as "0",
+            SUM(CASE WHEN winningapple_id = 1 THEN 1 ELSE 0 END) as "1",
+            SUM(CASE WHEN winningapple_id = 2 THEN 1 ELSE 0 END) as "2",
+            SUM(CASE WHEN winningapple_id = 3 THEN 1 ELSE 0 END) as "3",
+            SUM(CASE WHEN winningapple_id = 4 THEN 1 ELSE 0 END) as "4",
+            SUM(CASE WHEN winningapple_id = 5 THEN 1 ELSE 0 END) as "5",
+            SUM(CASE WHEN winningapple_id = 6 THEN 1 ELSE 0 END) as "6",
+            SUM(CASE WHEN winningapple_id = 7 THEN 1 ELSE 0 END) as "7",
+            SUM(CASE WHEN winningapple_id = 8 THEN 1 ELSE 0 END) as "8",
+            SUM(CASE WHEN winningapple_id = 9 THEN 1 ELSE 0 END) as "9",
+            SUM(CASE WHEN winningapple_id = 10 THEN 1 ELSE 0 END) as "10"
+        FROM ApplePickerResults;
+        `;
+
+        const totalWinsRecord = await database.query(totalWinReport);
+
+        res.status(200).json({winners: totalWinsRecord.rows[0]});
+        return;
+    } catch (err) {
+        res.sendStatus(500);
+        return;
+    }
+});
+
 app.get("/ping", function (req, res) {
     return res.send("pong");
 });

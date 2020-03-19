@@ -11,7 +11,7 @@ import Reports from "./components/Reports";
 class AppRouter extends React.Component {
 
   /** Used to make picker link unclickable if a there is no username */
-  ensureUsernameProvided = (e) => {
+  ensureUsernameProvided (e) {
       if (this.props.username) return;
       e.preventDefault();
       alert("Input a username to view this page!");
@@ -66,5 +66,4 @@ class AppRouter extends React.Component {
 const mapState = state => ({
     username: state.username
 });
-
 export default connect(mapState)(AppRouter);

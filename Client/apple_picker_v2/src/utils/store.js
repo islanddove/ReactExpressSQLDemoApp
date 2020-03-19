@@ -1,6 +1,8 @@
 import { createStore, combineReducers } from "redux";
 import { appleInfo }  from "./constants";
 
+import { cloneDeep } from "lodash";
+
 // action types
 export const SET_USERNAME = "SET_USERNAME";
 export const CLEAR_USERNAME = "CLEAR_USERNAME";
@@ -39,16 +41,11 @@ export const username = (state = "", action) => {
     }
 };
 
-export const leaderboard = (state = appleInfo.map(apple => { apple.wins = 0; return apple }), action) => {
+export const leaderboard = (state = cloneDeep(appleInfo).map(apple => { apple.wins = 0; return apple }), action) => {
     switch (action.type) {
         case ADD_WIN_TO_LEADERBOARD: {
-            const updatedLeaderboard = state.map( apple => { if (apple.id === action.id) apple.wins++; return apple });
-            updatedLeaderboard.sort(function (a, b) {
-                if (a.wins < b.wins) return 1;
-                if (a.wins > b.wins) return -1;
-                return 0;
-            });
-            return updatedLeaderboard;
+            return state.map( apple => { if (apple.id === action.id) apple.wins++; return apple })
+                        .sort((a,b) => b.wins - a.wins);
         }
         case RESET_LEADERBOARD:
             return state.map(apple => { apple.wins = 0; return apple })

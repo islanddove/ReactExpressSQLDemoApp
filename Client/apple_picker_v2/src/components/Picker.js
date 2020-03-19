@@ -115,6 +115,8 @@ class Picker extends React.Component {
                     />
                 </div>
                 <div className = "Leaderboard">
+                    <h3>Current Leaderboard:</h3>
+                    <p> (refresh page or sign in as a different user to reset)</p>
                     <List
                         sortedWins={this.props.leaderboard}
                     />

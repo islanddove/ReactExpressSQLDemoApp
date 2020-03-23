@@ -1,0 +1,22 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API portion of codebase. Using a separare package.json here so there are no jest conflicts with client",
+  "main": "constants.js",
+  "scripts": {
+    "test": "jest --passWithNoTests"
+  },
+  "type": "module",
+  "author": "David Olsen",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  }
+}

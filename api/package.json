@@ -4,7 +4,7 @@
   "description": "API portion of codebase. Using a separare package.json here so there are no jest conflicts with client",
   "main": "constants.js",
   "scripts": {
-    "test": "jest --passWithNoTests"
+    "test": "jest"
   },
   "type": "module",
   "author": "David Olsen",

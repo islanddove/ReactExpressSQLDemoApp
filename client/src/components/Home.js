@@ -7,9 +7,9 @@ import { debounce } from "lodash";
 
 
 /** Home Page */
-class Home extends React.Component {
+export class Home extends React.Component {
 
-    onChange = debounce((username) => {
+    handleChange = debounce((username) => {
         this.props.setUsername(username);
         this.props.resetLeaderboard();
     }, 300);
@@ -17,11 +17,12 @@ class Home extends React.Component {
     render () {
         return (
             <form>
-                <p>{this.props.username ? "" : "Enter a User Name to proceed:"} </p>
-                <input
-                    type='text'
-                    onChange={(e) => this.onChange(e.target.value)}
-                />
+                <label>{this.props.username ? "" : "Enter a User Name to proceed:"} 
+                    <input
+                        type="text"
+                        onChange={(e) => this.handleChange(e.target.value)}
+                    />
+                </label>
                 <div>Current Username: {this.props.username ? this.props.username : "N/A"}</div>
             </form>
         );

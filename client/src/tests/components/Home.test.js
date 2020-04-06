@@ -2,24 +2,24 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
-//import debounce from "lodash/debounce";
-//jest.mock('lodash/debounce', () => jest.fn(fn => fn));
-
 import { Home } from "../../components/Home";
 
 // Note: in order to prevent an error with the state management code propogate to these tests,
-// all of the functionality of the redux stores are mocked and passed in as props.
-// the reasoning behind this is to keep these tests as atomic and 'unit-testish' as possible.
+//      all of the functionality of the redux stores are mocked and passed in as props.
+//      the reasoning behind this is to keep these tests as atomic and 'unit-testish' as possible.
 
-// https://github.com/facebook/jest/issues/3465#issuecomment-351186130
-// jest.mock('lodash/debounce', () => jest.fn(fn => fn));
+describe("prop render tests", () => {
 
-test("renders Home", () => {
-    render( <Home />);
-});
-
-// test the props
-describe("username prop render tests", () => {
+    test("renders Home with all props mocked out", () => {
+        // Whenever we add a prop to this component, remember to put it here for reference
+        render( 
+            <Home
+                username=""
+                setUsername={jest.fn()}
+                resetLeaderboard={jest.fn()}
+            />
+        );
+    });    
 
     test("displays username when it is provided as a prop", () => {
         const expectedText = "Current Username: dave";
@@ -40,10 +40,10 @@ describe("username prop render tests", () => {
     });
 });
 
-// test the event-handling functions 😱
+// Test the event-handling functions, and that any prop callbacks are called with the corect args.
 describe("event tests", () => {
 
-    test("changing input calls the prop functions with the correct inputs", () => {
+    test("changing input calls the prop functions with the correct values", () => {
         const mockSetUsername = jest.fn();
         const mockResetLeaderboard = jest.fn();
 

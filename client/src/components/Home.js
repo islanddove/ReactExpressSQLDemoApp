@@ -17,7 +17,7 @@ export class Home extends React.Component {
     render () {
         return (
             <form>
-                <label>{this.props.username ? "" : "Enter a User Name to proceed:"} 
+                <label>Enter a User Name to proceed:
                     <input
                         type="text"
                         onChange={(e) => this.handleChange(e.target.value)}

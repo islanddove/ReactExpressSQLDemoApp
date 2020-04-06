@@ -3,8 +3,8 @@ import React from "react";
 /** Helper SFC's */
 export const ImageView = props => {
     return (
-        <div className={props.class}>
-            <img src={props.src} onClick={props.onClick} alt="NOT FOUND"/>
+        <div className={props.class} data-testid={props.id} onClick={props.onClick} >
+            <img src={props.src} alt="NOT FOUND"/>
             <p>{props.text}</p>
         </div>
     );

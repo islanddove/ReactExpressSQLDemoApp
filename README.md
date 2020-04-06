@@ -2,10 +2,10 @@
 
 This is a React/Express application deployed on heroku at https://react-express-sql-demo-app.herokuapp.com/
 
-The file server.js is the lynchpin of this project. When deployed, it handles requests for resources, as well as serves up the React application.
+server.js handles requests for resources, as well as serves up the React application.
 
 ## Testing
-* This project uses Jest
+* This project uses Jest for testing both the client and api
 
 
 ## client

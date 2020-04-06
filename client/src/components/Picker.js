@@ -7,7 +7,7 @@ import { ImageView, Button, ListWinners as List } from "./StatelessFunctionalCom
 import "../css/Picker.css";
 
 /** Apple Picker */
-class Picker extends React.Component {
+export class Picker extends React.Component {
 
     constructor(props) {
         super(props);
@@ -99,12 +99,14 @@ class Picker extends React.Component {
                         class={this.state.selectedimage === "left" ? "ImageViewSelected" : "ImageView"}
                         onClick={() => this.setState({selectedimage: "left"})}
                         text={this.state.leftApple.name}
+                        id="left-apple"
                     />
                     <ImageView
                         src={this.state.rightApple.picture}
                         class={this.state.selectedimage === "right" ? "ImageViewSelected" : "ImageView"}
                         onClick={() => this.setState({selectedimage: "right"})}
                         text={this.state.rightApple.name}
+                        id="right-apple"
                     />
                 </div>
                 <div className = "Submit Winner">

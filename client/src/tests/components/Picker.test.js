@@ -11,7 +11,9 @@ import { Picker } from "../../components/Picker";
 // Note: I am also mocking the props passed in with react-router.
 // Note: I am also mocking the fetch endpoints for all the tests, since they are called on componentDidMount!
 
-const appleResponse = {
+// TODO: refactor expected text into constants!
+
+const getTwoApples = {
     leftApple: {
         id: "0",
         name: "leftApple",
@@ -30,7 +32,7 @@ const appleResponse = {
 describe("prop render tests", () => {
 
     beforeEach(() => {
-        fetchMock.mock("/getComparisonData", appleResponse);
+        fetchMock.mock("/getComparisonData", getTwoApples);
     });
 
     afterEach(() => {
@@ -98,8 +100,8 @@ describe("prop render tests", () => {
 describe("callback and event-handling tests", () => {
 
     beforeEach(() => {
-        fetchMock.mock("/getComparisonData", appleResponse);
-        fetchMock.mock("/postWinner", appleResponse);
+        fetchMock.mock("/getComparisonData", getTwoApples);
+        fetchMock.mock("/postWinner", getTwoApples);
     });
 
     afterEach(() => {
@@ -202,7 +204,7 @@ describe("callback and event-handling tests", () => {
         await wait(() => {
             // we called addWinToLeaderboard with the left apple Id
             expect(mockAddWinToLeaderboard.mock.calls.length).toBe(1);
-            expect(mockAddWinToLeaderboard.mock.calls[0][0]).toBe(appleResponse.leftApple.id);
+            expect(mockAddWinToLeaderboard.mock.calls[0][0]).toBe(getTwoApples.leftApple.id);
 
             // selected image is unselected
             expect(leftImageView).toHaveClass("ImageView");            

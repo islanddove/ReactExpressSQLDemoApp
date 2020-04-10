@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AppRouter from './AppRouter';
+import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
 
 import { Provider } from 'react-redux';
 import store from './utils/store'
 
+// BrowserRouter explanation: https://reacttraining.com/react-router/web/guides/primary-components
+
 ReactDOM.render(
     <Provider store={store}>
-      <AppRouter />
+        <BrowserRouter>
+            <AppRouter />
+        </BrowserRouter>
     </Provider>,
     document.getElementById('root')
 );

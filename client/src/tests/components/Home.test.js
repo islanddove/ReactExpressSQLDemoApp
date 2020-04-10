@@ -8,6 +8,8 @@ import { Home } from "../../components/Home";
 //      all of the functionality of the redux stores are mocked and passed in as props.
 //      the reasoning behind this is to keep these tests as atomic and 'unit-testish' as possible.
 
+// TODO: refactor expected text into constants!
+
 describe("prop render tests", () => {
 
     test("renders Home with all props mocked out", () => {

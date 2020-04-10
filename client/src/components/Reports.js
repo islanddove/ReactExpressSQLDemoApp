@@ -10,7 +10,7 @@ import { ListWinners as List } from "./StatelessFunctionalComponents";
 import { appleInfo }  from "../utils/constants";
 
 /** Reports */
-class Reports extends React.Component {
+export class Reports extends React.Component {
 
     constructor(props) {
         super(props);

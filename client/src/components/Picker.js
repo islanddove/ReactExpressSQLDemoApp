@@ -19,7 +19,7 @@ export class Picker extends React.Component {
             this.props.resetLeaderboard();
         }
 
-        this.state = { leftApple: {}, rightApple: {}, selectedimage: "" };
+        this.state = { leftApple: {}, rightApple: {}, selectedimage: "", loading: true };
     }
 
     async componentDidMount () {
@@ -29,7 +29,8 @@ export class Picker extends React.Component {
             this.setState({
                 leftApple: leftApple,
                 rightApple: rightApple,
-                selectedimage: "none"
+                selectedimage: "none",
+                loading: false
             });
         }
         catch (error) {
@@ -90,6 +91,9 @@ export class Picker extends React.Component {
     }
 
     render() {
+
+        if (this.state.loading) return null;
+
         return (
             <div className="App">
                 <h1>Pick an Apple, {this.props.username}!</h1>

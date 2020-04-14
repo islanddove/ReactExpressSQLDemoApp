@@ -31,3 +31,12 @@ export const ListWinners = props => {
         </ol>
     );
 }
+
+// font-awesome gear, idea from https://programmingwithmosh.com/react/create-react-loading-spinner/
+export const Loading = props => {
+    return (
+        <div className={props.class}>
+            <i className="fa fa-cog fa-spin fa-10x" />
+        </div>
+    );
+}

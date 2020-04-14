@@ -41,13 +41,15 @@ describe("prop render tests", () => {
         );
     });
 
-    test("displays username when it is provided as a prop", () => {
+    test("displays username when it is provided as a prop", async () => {
         const expectedText = "Hello, dave. Here is a report for the total number of winners:";
 
         const { getByText } = render( <Reports username="dave" match={{ params : { username : "dave" }}} />);
-        const text = getByText(expectedText);
-
-        expect(text).toBeInTheDocument();
+        
+        await wait(() => {
+            const text = getByText(expectedText);
+            expect(text).toBeInTheDocument();
+        });
     });
 
     test("when username and url param are different on init, clear leaderboard and update username with url param name", () => {

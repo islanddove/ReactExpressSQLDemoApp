@@ -21,7 +21,7 @@ export class Reports extends React.Component {
             this.props.resetLeaderboard();
         }
 
-        this.state = { totalWins: [], userWins: [] };
+        this.state = { totalWins: [], userWins: [], loading: true };
     }
 
     async componentDidMount () {
@@ -34,7 +34,8 @@ export class Reports extends React.Component {
                                     .map(apple => { apple.wins = winners[apple.id]; return apple; })
                                     .sort((a, b) => b.wins - a.wins);
             this.setState({
-                totalWins: sortedTotalWins
+                totalWins: sortedTotalWins,
+                loading: false
             });
         }
         catch (error) {
@@ -43,6 +44,9 @@ export class Reports extends React.Component {
     }
 
     render(){
+
+        if (this.state.loading) return null;
+
         return (
             <div>
                 <h2>Hello, {this.props.username}. Here is a report for the total number of winners: </h2>

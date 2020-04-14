@@ -39,6 +39,14 @@
   font-family: courier;
 }
 
+.Spinner {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+  font-family: courier;
+}
+
 .Button {
   text-align: center;
   background-color: #ffffff;

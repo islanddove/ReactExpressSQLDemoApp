@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
-import { ImageView, Button, ListWinners } from "../../components/StatelessFunctionalComponents";
+import { ImageView, Button, ListWinners, Loading } from "../../components/StatelessFunctionalComponents";
 
 test("renders ImageView", () => {
     const { getByText } = render(<ImageView text="text"/>);
@@ -26,4 +26,8 @@ test("renders ListWinners", () => {
 
     const wins = getAllByText(/name[0-9]: [0-9]/);
     expect(wins).toHaveLength(2);
+});
+
+test("renders Loading", () => {
+    render(<Loading class="fakeClass"/>);
 });

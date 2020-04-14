@@ -53,16 +53,18 @@ describe("prop render tests", () => {
         );
     });
 
-    test("displays username when it is provided as a prop", () => {
+    test("displays username when it is provided as a prop", async () => {
         const expectedText = "Pick an Apple, dave!";
 
         const { getByText } = render( <Picker username="dave" leaderboard={[]} match={{ params : { username : "dave" }}} />);
-        const text = getByText(expectedText);
-
-        expect(text).toBeInTheDocument();
+        
+        await wait(() => {
+            const text = getByText(expectedText);
+            expect(text).toBeInTheDocument();
+        });
     });
 
-    test("displays leaderboard when it is provided as a prop", () => {
+    test("displays leaderboard when it is provided as a prop", async () => {
 
         const leaderboard = [ 
             { name: "name1", wins: 1, id: 0},
@@ -71,8 +73,10 @@ describe("prop render tests", () => {
 
         const { getAllByText } = render( <Picker username="" leaderboard={leaderboard} match={{ params : { username : "" }}} />);
 
-        const wins = getAllByText(/name[0-9]: [0-9]/);
-        expect(wins).toHaveLength(2);
+        await wait(() => {
+            const wins = getAllByText(/name[0-9]: [0-9]/);
+            expect(wins).toHaveLength(2);
+        });
     });
 
     test("when username and url param are different on init, clear leaderboard and update username with url param name", () => {
@@ -182,14 +186,17 @@ describe("callback and event-handling tests", () => {
             />
         );
 
-        const leftImageView = getByTestId("left-apple");
-        const button = getByText("Submit an Apple");
-
-        expect(button).toBeInTheDocument();
-        expect(leftImageView).toBeInTheDocument();
+        let leftImageView = null;
+        let button = null;
 
         // need ComponentDidMount to finish
         await wait(() => {
+            leftImageView = getByTestId("left-apple");
+            button = getByText("Submit an Apple");
+    
+            expect(button).toBeInTheDocument();
+            expect(leftImageView).toBeInTheDocument();    
+
             expect(leftImageView).toHaveClass("ImageView");
         });
 
